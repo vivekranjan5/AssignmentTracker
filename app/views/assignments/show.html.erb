@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>Title:</b>
   <%= @assignment.title %>
@@ -22,6 +20,6 @@
 </p>
  
 <%if user_signed_in? && current_user==@assignment.creator %>
-<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
+	<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
 <% end %> 
 <%= link_to 'Back', assignments_path %>

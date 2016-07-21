@@ -3,4 +3,7 @@ class Assignment < ActiveRecord::Base
 	has_many :users , :through => :submits
 	has_many :submits
 	belongs_to :creator, :foreign_key => "creator_id", :class_name => "User"
+
+	validates :title, presence: true
+	validates :content, presence: true
 end

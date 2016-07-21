@@ -1,6 +1,7 @@
 class AssignmentsController < ApplicationController
   # GET /assignments
   # GET /assignments.json
+  
   def index
     @assignments = Assignment.all
 
@@ -89,4 +90,5 @@ class AssignmentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 end

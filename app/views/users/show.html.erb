@@ -1,5 +1,55 @@
-<%= current_user.name %>
-<br>
-<% current_user.assignments.each do |assignment| %>
-	<%= assignment.title %><br>
+
+<br><br>
+
+<h1>Listing <%= current_user.name %> assignments</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Content</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @assignments.each do |assignment| %>
+  <tr>
+    <td><%= assignment.title %></td>
+    <td><%= assignment.content %></td>
+
+    <td><%= link_to 'Show', assignment %></td>
+    <!--
+    <% if user_signed_in? && current_user==assignment.creator %>
+      <td><%= link_to 'Edit', edit_assignment_path(assignment) %></td>
+      <td><%= link_to 'Destroy', assignment, confirm: 'Are you sure?', method: :delete %></td>
+    <% end %> -->
+  </tr>
+<% end %>
+</table>
+
+<br />
+<br><br><br>
+<h1> My Created Assignments </h1>
+
+<% if current_user.tasks.length > 0 %>
+	<table>
+  <tr>
+    <th>Title</th>
+    <th>Content</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% current_user.tasks.each do |assignment| %>
+  <tr>
+    <td><%= assignment.title %></td>
+    <td><%= assignment.content %></td>
+
+    <td><%= link_to 'Show', assignment %></td>
+      <td><%= link_to 'Edit', edit_assignment_path(assignment) %></td>
+      <td><%= link_to 'Destroy', assignment, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
 <% end %>
