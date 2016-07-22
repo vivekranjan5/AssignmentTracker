@@ -74,14 +74,13 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       @assignment = return_if_assignment_exists?
+      if params[:assignments_user][:is_compeleted]==1
+        @completion_value = true
+      else
+        @completion_value = false
+      end
       if @assignment.update_attributes(params[:assignment])
-        params[:users][:id].each do |user_id|
-          if !user_id.empty?
-            @assignment.assignments_users.build(:user_id => user_id)
-          end
-        end
-        @assignment.assignments_users.build(:current_status => "In Progress")
-        
+        current_user.assignments_users.where(:assignment_id => @assignment.id).first.update_attributes(:current_status => "In Progress", :is_compeleted => @completion_value)
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else

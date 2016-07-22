@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160722094629) do
+ActiveRecord::Schema.define(:version => 20160722104614) do
 
   create_table "assignments", :force => true do |t|
     t.string   "title"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20160722094629) do
     t.string   "current_status",  :default => "Assigned"
     t.datetime "alloted_date"
     t.datetime "completion_date"
+    t.boolean  "is_compeleted",   :default => false
   end
 
   create_table "users", :force => true do |t|
