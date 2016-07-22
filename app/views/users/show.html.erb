@@ -31,7 +31,7 @@
 <br><br><br>
 <h1> My Created Assignments </h1>
 
-<% if current_user.tasks.length > 0 %>
+<% if current_user.created_assignments.length > 0 %>
 	<table>
   <tr>
     <th>Title</th>
@@ -41,7 +41,7 @@
     <th></th>
   </tr>
 
-<% current_user.tasks.each do |assignment| %>
+<% current_user.created_assignments.each do |assignment| %>
   <tr>
     <td><%= assignment.title %></td>
     <td><%= assignment.content %></td>

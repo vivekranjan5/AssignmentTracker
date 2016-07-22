@@ -19,17 +19,15 @@
     <%= f.label :content %><br />
     <%= f.text_area :content %>
   </div>
-  <div class="field">
-    <%= f.label :start_date %><br />
-    <%= f.date_select :start_date %>
-  </div>
+  
 
-
-  <%= fields_for (@assignment_user) do |temp_users| %>
-    <div class="field">
-      <%= temp_users.label "Project Assignees" %>
-      <%= collection_select(:users,:id, @all_users, :id, :name, {}, {:multiple => true}) %>
-    </div>
+  <% if controller.action_name=="new" %>
+    <%= fields_for (@assignment_user) do |temp_users| %>
+      <div class="field">
+        <%= temp_users.label "Project Assignees" %>
+        <%= collection_select(:users,:id, @all_users, :id, :name, {}, {:multiple => true}) %>
+      </div>
+    <% end %>
   <% end %>
   <div class="actions">
     <%= f.submit %>

@@ -3,7 +3,6 @@ class AssignmentsController < ApplicationController
   # GET /assignments.json
 
   before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy]
-  
   def index
     @assignments = Assignment.all
 
@@ -17,7 +16,7 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1.json
   def show
     @assignment = return_if_assignment_exists?
-
+    @temp_assignment = @assignment.assignments_users.where(:user_id => current_user.id)
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
@@ -50,10 +49,12 @@ class AssignmentsController < ApplicationController
   # POST /assignments
   # POST /assignments.json
   def create
+    params[:assignment][:start_date] = DateTime.current
     @assignment = current_user.created_assignments.create(params[:assignment])
     params[:users][:id].each do |user|
       if !user.empty?
-        @assignment.assignments_users.build(:user_id => user)
+        @assignment.assignments_users.build(:user_id => user, :current_status => "Assigned(Initial)", :alloted_date => DateTime.current)
+        
       end
     end
 
@@ -74,11 +75,13 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       @assignment = return_if_assignment_exists?
       if @assignment.update_attributes(params[:assignment])
-        params[:users][:id].each do |user|
-          if !user.empty?
-            @assignment.assignments_users.build(:user_id => user)
+        params[:users][:id].each do |user_id|
+          if !user_id.empty?
+            @assignment.assignments_users.build(:user_id => user_id)
           end
         end
+        @assignment.assignments_users.build(:current_status => "In Progress")
+        
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
@@ -110,6 +113,5 @@ class AssignmentsController < ApplicationController
       @valid_assignments.first
     end
   end
-
 
 end

@@ -55,5 +55,8 @@ module AssignTracker
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    #To view asset pipeline log if it has been turned off by quiet_asset gem
+    #config.quiet_assets = false
   end
 end
