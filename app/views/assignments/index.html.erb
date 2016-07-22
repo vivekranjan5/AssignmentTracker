@@ -16,10 +16,11 @@
     <td><%= assignment.content %></td>
     <td><%= assignment.creator.name %></td>
     <td><%= link_to 'Show', assignment %></td>
+    <td><%= link_to 'Destroy', assignment, confirm: 'Are you sure?', method: :delete %></td>
     <!--
     <% if user_signed_in? && current_user==assignment.creator %>
       <td><%= link_to 'Edit', edit_assignment_path(assignment) %></td>
-      <td><%= link_to 'Destroy', assignment, confirm: 'Are you sure?', method: :delete %></td>
+      
     <% end %> -->
   </tr>
 <% end %>

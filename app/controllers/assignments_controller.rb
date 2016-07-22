@@ -29,6 +29,9 @@ class AssignmentsController < ApplicationController
   def new
     @assignment = Assignment.new
 
+    @all_users = User.all
+
+    @assignment_user = @assignment.assignments_users.build
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @assignment }
@@ -38,17 +41,22 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1/edit
   def edit
     @assignment = return_if_assignment_exists?
+
+    @all_users = User.all
+
+    @assignment_user = @assignment.assignments_users.build
   end
 
   # POST /assignments
   # POST /assignments.json
   def create
-    @assignment = current_user.tasks.create(params[:assignment])
-    @users_email_list = params[:assignee].split(',')
-    @users_email_list.each do |email|
-      @user = User.find_by_email(email)
-      @assignment.users << @user
+    @assignment = current_user.created_assignments.create(params[:assignment])
+    params[:users][:id].each do |user|
+      if !user.empty?
+        @assignment.assignments_users.build(:user_id => user)
+      end
     end
+
     respond_to do |format|
       if @assignment.save
         format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
@@ -63,13 +71,13 @@ class AssignmentsController < ApplicationController
   # PUT /assignments/1
   # PUT /assignments/1.json
   def update
-    @users_email_list = params[:assignee].split(',')
     respond_to do |format|
+      @assignment = return_if_assignment_exists?
       if @assignment.update_attributes(params[:assignment])
-        @assignment.users.clear
-        @users_email_list.each do |email|
-          @user = User.find_by_email(email)
-          @assignment.users << @user
+        params[:users][:id].each do |user|
+          if !user.empty?
+            @assignment.assignments_users.build(:user_id => user)
+          end
         end
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }

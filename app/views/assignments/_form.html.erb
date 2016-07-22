@@ -23,10 +23,14 @@
     <%= f.label :start_date %><br />
     <%= f.date_select :start_date %>
   </div>
-  <div class="field">
-    <%= label_tag :assignee %>
-    <%= text_field_tag :assignee %>
-  </div>
+
+
+  <%= fields_for (@assignment_user) do |temp_users| %>
+    <div class="field">
+      <%= temp_users.label "Project Assignees" %>
+      <%= collection_select(:users,:id, @all_users, :id, :name, {}, {:multiple => true}) %>
+    </div>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>
