@@ -1,6 +1,8 @@
 class AssignmentsController < ApplicationController
   # GET /assignments
   # GET /assignments.json
+
+  before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy]
   
   def index
     @assignments = Assignment.all
@@ -14,7 +16,7 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1
   # GET /assignments/1.json
   def show
-    @assignment = Assignment.find(params[:id])
+    @assignment = return_if_assignment_exists?
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,7 +37,7 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1/edit
   def edit
-    @assignment = Assignment.find(params[:id])
+    @assignment = return_if_assignment_exists?
   end
 
   # POST /assignments
@@ -61,7 +63,6 @@ class AssignmentsController < ApplicationController
   # PUT /assignments/1
   # PUT /assignments/1.json
   def update
-    @assignment = Assignment.find(params[:id])
     @users_email_list = params[:assignee].split(',')
     respond_to do |format|
       if @assignment.update_attributes(params[:assignment])
@@ -82,7 +83,7 @@ class AssignmentsController < ApplicationController
   # DELETE /assignments/1
   # DELETE /assignments/1.json
   def destroy
-    @assignment = Assignment.find(params[:id])
+    @assignment = return_if_assignment_exists?
     @assignment.destroy
 
     respond_to do |format|
@@ -90,5 +91,17 @@ class AssignmentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+
+  def return_if_assignment_exists?
+    @valid_assignments = Assignment.where(:id => params[:id])
+    if @valid_assignments.empty?
+      redirect_to root_path
+    else
+      @valid_assignments.first
+    end
+  end
+
 
 end
