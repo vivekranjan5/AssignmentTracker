@@ -7,29 +7,36 @@
  	<%= @assignment.creator.name %>
 </p>
 <p>
-	<b>Assignment Creation Date: </b>
-	<%= @assignment.start_date.strftime("%d-%m-%Y") %>
+	<b>Start Date: </b>
+	<% if @assignment.start_date.nil? %>
+		<%= "Assignment Not Yet Started" %>
+	<% else %>
+		<%= @assignment.start_date.strftime("%d-%m-%Y") %>
+	<% end %>
 </p>
-<% if @temp_assignment.exists? %>
+
 	<p>
  		<b>Project Status: </b>
- 		<%= @temp_assignment.first.current_status %>
+ 		<%= give_status(@assignment.current_status) %>
 	</p>
-<% end %>
+
 <p>
  	<b>Assigned To: </b>
- 	<ol>
+ 	<ul>
  	<% @assignment.assigned_users.each do |user| %>
  		<li><%= user.name %></li>
  	<% end %>
- 	</ol>
+ 	</ul>
  </p>
 <p>
   <b>Content:</b>
   <%= @assignment.content %>
 </p>
  
+
+
 <%if user_signed_in? %>
+	<%= link_to 'Assign to users',assignusers_path(@assignment) %> | 
 	<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
 <% end %> 
 <%= link_to 'Back', assignments_path %>

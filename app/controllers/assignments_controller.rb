@@ -2,7 +2,8 @@ class AssignmentsController < ApplicationController
   # GET /assignments
   # GET /assignments.json
 
-  before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy]
+  before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy, :assignees]
+
   def index
     @assignments = Assignment.all
 
@@ -49,15 +50,14 @@ class AssignmentsController < ApplicationController
   # POST /assignments
   # POST /assignments.json
   def create
-    params[:assignment][:start_date] = DateTime.current
+    
     @assignment = current_user.created_assignments.create(params[:assignment])
-    params[:users][:id].each do |user|
-      if !user.empty?
-        @assignment.assignments_users.build(:user_id => user, :current_status => "Assigned(Initial)", :alloted_date => DateTime.current)
+    #params[:users][:id].each do |user|
+     # if !user.empty?
+      #  @assignment.assignments_users.build(:user_id => user, :current_status => "Assigned(Initial)", :alloted_date => DateTime.current)
         
-      end
-    end
-
+      #end
+    #end
     respond_to do |format|
       if @assignment.save
         format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
@@ -74,13 +74,7 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       @assignment = return_if_assignment_exists?
-      if params[:assignments_user][:is_compeleted]==1
-        @completion_value = true
-      else
-        @completion_value = false
-      end
       if @assignment.update_attributes(params[:assignment])
-        current_user.assignments_users.where(:assignment_id => @assignment.id).first.update_attributes(:current_status => "In Progress", :is_compeleted => @completion_value)
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
@@ -102,6 +96,38 @@ class AssignmentsController < ApplicationController
     end
   end
 
+
+  def assignees
+    @assignment = return_if_assignment_exists?
+    @alloted_users = @assignment.assigned_users
+    if @alloted_users.count == 0
+      @all_users = User.all
+    else
+      @all_users = []
+      User.all.each do |user|
+        unless @alloted_users.include? user
+          @all_users << user
+        end
+      end
+    end
+
+    @assignment_user = @assignment.assignments_users.build
+  end
+  
+  def createassignees
+    @assignment = Assignment.find_by_id(params[:id])
+    params[:users][:id].each do |user|
+     if !user.empty?
+       @assignment.assignments_users.create(:user_id => user)    
+      end
+    end
+    
+      redirect_to assignment_path(@assignment)
+    
+  end
+
+  
+
   private
 
   def return_if_assignment_exists?
@@ -111,6 +137,10 @@ class AssignmentsController < ApplicationController
     else
       @valid_assignments.first
     end
+  end
+
+  def assignment_params
+    params.require(:assignemnt).permit!
   end
 
 end

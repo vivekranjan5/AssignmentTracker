@@ -2,8 +2,11 @@ AssignTracker::Application.routes.draw do
   devise_for :users
   
   resources :assignments
-  resources :users, only: [:show]
+  resources :users, only: [:show,:index]
+  get 'assignment/assignees/:id' => 'assignments#assignees', :as => "assignusers"
+  post 'assignment/assignees/:id' => 'assignments#createassignees'
   root :to => "assignments#index"
+
 
 
   # The priority is based upon order of creation:

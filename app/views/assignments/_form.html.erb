@@ -20,22 +20,6 @@
     <%= f.text_area :content %>
   </div>
   
-  <%= fields_for (@assignment_user) do |temp_users| %>
-    <% if controller.action_name=="new" %>
-    
-      <div class="field">
-        <%= temp_users.label "Project Assignees" %>
-        <%= collection_select(:users,:id, @all_users, :id, :name, {}, {:multiple => true}) %>
-      </div>
-      <% end %>
-      <% if controller.action_name == "edit" %>
-        <div class="field">
-          <%= temp_users.check_box :is_compeleted %>
-          <%= temp_users.label :is_compeleted, "Completed???" %>
-        </div>
-      
-    <% end %>
-  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

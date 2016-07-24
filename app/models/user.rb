@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
 
   #association with assignments in the form of creator
-  has_many :created_assignments, :class_name => "Assignment", :foreign_key => "creator_id"
+  has_many :created_assignments, :class_name => "Assignment", :foreign_key => "creator_id", :dependent => :destroy
   
 
 
