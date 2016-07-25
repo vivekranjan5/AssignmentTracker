@@ -17,9 +17,10 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1
   # GET /assignments/1.json
   def show
-    @assignment = return_if_assignment_exists?
+    #@@assignment = return_if_assignment_exists?
     @temp_assignment = @assignment.assignments_users.where(:user_id => current_user.id)
-    @comments = @assignment.comments.order("created_at DESC")
+    @comments = @assignment.comments
+    @subtasks = @assignment.subtasks
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
@@ -42,7 +43,7 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1/edit
   def edit
-    @assignment = return_if_assignment_exists?
+    #@assignment = return_if_assignment_exists?
 
     @all_users = User.all
 
@@ -89,7 +90,7 @@ class AssignmentsController < ApplicationController
   # DELETE /assignments/1
   # DELETE /assignments/1.json
   def destroy
-    @assignment = return_if_assignment_exists?
+    #@assignment = return_if_assignment_exists?
     @assignment.destroy
 
     respond_to do |format|
@@ -100,7 +101,7 @@ class AssignmentsController < ApplicationController
 
 
   def assignees
-    @assignment = return_if_assignment_exists?
+    #@assignment = return_if_assignment_exists?
     @alloted_users = @assignment.assigned_users
     if @alloted_users.count == 0
       @all_users = User.all
@@ -128,7 +129,12 @@ class AssignmentsController < ApplicationController
     
   end
 
-  
+  def incstatus
+    @assignment = Assignment.find_by_id(params[:id])
+    @assignment.assignments_users.where(:user_id => current_user.id).first.increment!("current_status")
+    @assignment.save!
+    redirect_to @assignment
+  end
 
   private
 
@@ -137,7 +143,7 @@ class AssignmentsController < ApplicationController
     if @valid_assignments.empty?
       redirect_to root_path
     else
-      @valid_assignments.first
+      @assignment = @valid_assignments.first
     end
   end
 

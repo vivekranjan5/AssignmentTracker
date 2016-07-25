@@ -1,4 +1,7 @@
 class Comment < ActiveRecord::Base
 	include ActiveModel::ForbiddenAttributesProtection
-	belongs_to :assingment
+	belongs_to :assignment
+	belongs_to :user
+
+	
 end

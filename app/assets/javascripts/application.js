@@ -15,6 +15,3 @@
 //= require_tree .
 
 
-$("#comments-link").click(function(){
-	$("comments-section").fadeToggle;
-});

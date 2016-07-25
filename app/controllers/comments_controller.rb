@@ -5,10 +5,10 @@ class CommentsController < ApplicationController
 		@comment.user_name = current_user.name
 		@comment.save!
 		respond_to do |format|
-      format.html { redirect_to @assingment}
-      format.js
-    end
-  end
+      		format.html { redirect_to @assignment}
+      		format.js
+    	end
+ 	end
 	private
 
 	def comment_params

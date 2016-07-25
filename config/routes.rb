@@ -1,11 +1,19 @@
 AssignTracker::Application.routes.draw do
+  get "subtasks/new"
+
+  get "subtasks/created"
+
+  get "subtasks/index"
+
   devise_for :users
   
   resources :assignments do 
     resources :comments, module: :assignments 
+    resources :subtasks
   end
   resources :users, only: [:show,:index]
   get 'assignment/assignees/:id' => 'assignments#assignees', :as => "assignusers"
+  get 'assignment/incstatus/:id' => 'assignments#incstatus', :as => "incstatus"
   post 'assignment/assignees/:id' => 'assignments#createassignees'
   root :to => "assignments#index"
 

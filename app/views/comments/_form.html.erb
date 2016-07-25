@@ -3,10 +3,10 @@
 	<fieldset>
 		<ol>
 			<li>
-				<%= f.text_area :body, :rows => 2, :cols=>60,  :placeholder => "Place your comment here" %>
+				<%= f.text_area :body, :rows => 2, :cols=>60,  :placeholder => "Place your comment here" ,:id => "text-area-comments"%>
 			</li>
 			<li>
-				<%= f.submit "Post Comment" %>
+				<%= f.submit "Post Comment", :id => "submit-button"%>
 			</li>
 		</ol>
 	</fieldset>

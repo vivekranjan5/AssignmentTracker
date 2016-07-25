@@ -13,17 +13,12 @@ class Assignment < ActiveRecord::Base
 	has_many :comments, :dependent => :destroy
 
 
+
 	belongs_to :creator, :foreign_key => "creator_id", :class_name => "User"
+
 
 	validates :title, presence: true
 	validates :content, presence: true
 
-	#enumerize the status of project
-
-	#enumerize :current_status, 	in: [:assigned, :inprogress, :completed]
-	
-
-	
-	
-	
+	has_many :subtasks
 end

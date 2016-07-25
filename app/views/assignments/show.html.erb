@@ -14,12 +14,31 @@
 		<%= @assignment.start_date.strftime("%d-%m-%Y") %>
 	<% end %>
 </p>
-
+	<% if @assignment.assignments_users.where(:user_id => current_user.id).exists? %>
 	<p>
  		<b>Project Status: </b>
- 		<%= give_status(@assignment.current_status) %>
+ 		<%= give_status(@assignment.assignments_users.where(:user_id => current_user.id).first.current_status) %>
 	</p>
+	<p>
+	<% unless @assignment.assignments_users.where(:user_id => current_user.id).first.current_status>=2  %>
+ <b>Mark Assignment as: <%= link_to give_status(@assignment.assignments_users.where(:user_id => current_user.id).first.current_status+1), incstatus_path(@assignment) %></b>
+ <% end %>
+	</p>
+	<% end %>
+<p>
+	<b><%= link_to "Create Subtasks", new_assignment_subtask_path(@assignment) %></b>
+	<br>
+	<b>Subtasks of this Assignment</b>
+	<ol>
+	<% @subtasks.each do |subtask| %>
+		<li><%= subtask.subtask_content %>
+		 
+			<%= link_to "Delete the Subtaks", [@assignment, subtask],:method => :delete, :confirm => "Are you sure you want to delete the subtaks" %>
+		</li>
 
+	<% end %>
+	</ol>
+</p>
 <p>
  	<b>Assigned To: </b>
  	<ul>
@@ -33,6 +52,10 @@
   <%= @assignment.content %>
 </p>
  
+ <br>
+ 
+ <br>
+
  <%if user_signed_in? %>
 	<%= link_to 'Assign to users',assignusers_path(@assignment) %> | 
 	<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
@@ -45,7 +68,7 @@
  
  <section id="comments-section">
  	<ol id="comments">
- 	<%= render @comments %>
+ 		<%= render @comments %>
  	</ol>
  	<% if @assignment.creator==current_user or @assignment.assigned_users.include? current_user %>
  	<%= render 'comments/form' %>
