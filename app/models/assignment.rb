@@ -1,5 +1,6 @@
 class Assignment < ActiveRecord::Base
 	#extend Enumerize
+	include ActiveModel::ForbiddenAttributesProtection
 	#many to many association with the user
 	attr_accessible :title,:content,:start_date
 
@@ -8,7 +9,8 @@ class Assignment < ActiveRecord::Base
 	has_many :assigned_users , :through => :assignments_users, :source => :user
 	
 
-
+	#has many belongs to association with comments
+	has_many :comments, :dependent => :destroy
 
 
 	belongs_to :creator, :foreign_key => "creator_id", :class_name => "User"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160723135942) do
+ActiveRecord::Schema.define(:version => 20160724055107) do
 
   create_table "assignments", :force => true do |t|
     t.string   "title"
@@ -32,6 +32,14 @@ ActiveRecord::Schema.define(:version => 20160723135942) do
     t.datetime "alloted_date"
     t.datetime "completion_date"
     t.boolean  "is_compeleted",   :default => false
+  end
+
+  create_table "comments", :force => true do |t|
+    t.text     "body"
+    t.string   "user_name"
+    t.integer  "assignment_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "users", :force => true do |t|

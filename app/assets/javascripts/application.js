@@ -13,3 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+
+$("#comments-link").click(function(){
+	$("comments-section").fadeToggle;
+});

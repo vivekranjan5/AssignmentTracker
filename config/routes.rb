@@ -1,7 +1,9 @@
 AssignTracker::Application.routes.draw do
   devise_for :users
   
-  resources :assignments
+  resources :assignments do 
+    resources :comments, module: :assignments 
+  end
   resources :users, only: [:show,:index]
   get 'assignment/assignees/:id' => 'assignments#assignees', :as => "assignusers"
   post 'assignment/assignees/:id' => 'assignments#createassignees'

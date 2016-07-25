@@ -33,10 +33,26 @@
   <%= @assignment.content %>
 </p>
  
-
-
-<%if user_signed_in? %>
+ <%if user_signed_in? %>
 	<%= link_to 'Assign to users',assignusers_path(@assignment) %> | 
 	<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
 <% end %> 
 <%= link_to 'Back', assignments_path %>
+ 
+ <p>
+ <%= link_to "Comments" , "#", :id => "comments-link" %>
+ </p>
+ 
+ <section id="comments-section">
+ 	<ol id="comments">
+ 	<%= render @comments %>
+ 	</ol>
+ 	<% if @assignment.creator==current_user or @assignment.assigned_users.include? current_user %>
+ 	<%= render 'comments/form' %>
+	<% end %>
+</section>
+
+ 
+<br><br>
+
+

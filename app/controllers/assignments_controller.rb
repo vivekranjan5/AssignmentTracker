@@ -3,9 +3,10 @@ class AssignmentsController < ApplicationController
   # GET /assignments.json
 
   before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy, :assignees]
+  before_filter :authenticate_user!
 
   def index
-    @assignments = Assignment.all
+    @assignments = Assignment.order("created_at DESC")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +19,7 @@ class AssignmentsController < ApplicationController
   def show
     @assignment = return_if_assignment_exists?
     @temp_assignment = @assignment.assignments_users.where(:user_id => current_user.id)
+    @comments = @assignment.comments.order("created_at DESC")
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
@@ -51,7 +53,7 @@ class AssignmentsController < ApplicationController
   # POST /assignments.json
   def create
     
-    @assignment = current_user.created_assignments.create(params[:assignment])
+    @assignment = current_user.created_assignments.create(assignment_params)
     #params[:users][:id].each do |user|
      # if !user.empty?
       #  @assignment.assignments_users.build(:user_id => user, :current_status => "Assigned(Initial)", :alloted_date => DateTime.current)
@@ -74,7 +76,7 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       @assignment = return_if_assignment_exists?
-      if @assignment.update_attributes(params[:assignment])
+      if @assignment.update_attributes(assignment_params)
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
@@ -140,7 +142,7 @@ class AssignmentsController < ApplicationController
   end
 
   def assignment_params
-    params.require(:assignemnt).permit!
+    params.require(:assignment).permit(:title,:content)
   end
 
 end
