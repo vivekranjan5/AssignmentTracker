@@ -18,7 +18,7 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1.json
   def show
     #@@assignment = return_if_assignment_exists?
-    @temp_assignment = @assignment.assignments_users.where(:user_id => current_user.id)
+    @temp_assignment = @assignment.assignments_users.where(:assignee_id => current_user.id)
     @comments = @assignment.comments
     @subtasks = @assignment.subtasks
     respond_to do |format|
@@ -31,10 +31,6 @@ class AssignmentsController < ApplicationController
   # GET /assignments/new.json
   def new
     @assignment = Assignment.new
-
-    @all_users = User.all
-
-    @assignment_user = @assignment.assignments_users.build
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @assignment }
@@ -43,26 +39,15 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1/edit
   def edit
-    #@assignment = return_if_assignment_exists?
-
-    @all_users = User.all
-
-    @assignment_user = @assignment.assignments_users.build
   end
 
   # POST /assignments
   # POST /assignments.json
   def create
-    
     @assignment = current_user.created_assignments.create(assignment_params)
-    #params[:users][:id].each do |user|
-     # if !user.empty?
-      #  @assignment.assignments_users.build(:user_id => user, :current_status => "Assigned(Initial)", :alloted_date => DateTime.current)
-        
-      #end
-    #end
     respond_to do |format|
       if @assignment.save
+        UserMailer.new_assignment_created(current_user).deliver
         format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
         format.json { render json: @assignment, status: :created, location: @assignment }
       else
@@ -78,6 +63,7 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       @assignment = return_if_assignment_exists?
       if @assignment.update_attributes(assignment_params)
+        UserMailer.assignment_updated(current_user).deliver
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
@@ -90,11 +76,11 @@ class AssignmentsController < ApplicationController
   # DELETE /assignments/1
   # DELETE /assignments/1.json
   def destroy
-    #@assignment = return_if_assignment_exists?
+    @creator = @assignment.creator
+    AssignmentMailer.destroy_mail(current_user, @creator, @assignment).deliver
     @assignment.destroy
-
     respond_to do |format|
-      format.html { redirect_to assignments_url }
+      format.html { redirect_to assignments_url, :notice => "Assignment has been destroyed" }
       format.json { head :no_content }
     end
   end
@@ -113,7 +99,6 @@ class AssignmentsController < ApplicationController
         end
       end
     end
-
     @assignment_user = @assignment.assignments_users.build
   end
   
@@ -121,7 +106,7 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.find_by_id(params[:id])
     params[:users][:id].each do |user|
      if !user.empty?
-       @assignment.assignments_users.create(:user_id => user)    
+       @assignment.assignments_users.create(:assignee_id => user, :assignor_id => current_user.id)    
       end
     end
     
@@ -131,7 +116,7 @@ class AssignmentsController < ApplicationController
 
   def incstatus
     @assignment = Assignment.find_by_id(params[:id])
-    @assignment.assignments_users.where(:user_id => current_user.id).first.increment!("current_status")
+    @assignment.assignments_users.where(:assignee_id => current_user.id).first.increment!("current_status")
     @assignment.save!
     redirect_to @assignment
   end

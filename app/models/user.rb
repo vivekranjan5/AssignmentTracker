@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
+  #include ActiveModel::ForbiddenAttributesProtection
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   #many to many association with assignment through submits
   has_many :assignments, :through => :assignments_users
-  has_many :assignments_users
+  has_many :assignments_users, :foreign_key => "assignee_id"
 
 
   # Setup accessible (or protected) attributes for your model

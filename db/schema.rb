@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160725094557) do
+ActiveRecord::Schema.define(:version => 20160726055054) do
 
   create_table "assignments", :force => true do |t|
     t.string   "title"
@@ -24,13 +24,14 @@ ActiveRecord::Schema.define(:version => 20160725094557) do
 
   create_table "assignments_users", :force => true do |t|
     t.integer  "assignment_id"
-    t.integer  "user_id"
+    t.integer  "assignee_id"
     t.datetime "created_at",                                        :null => false
     t.datetime "updated_at",                                        :null => false
     t.integer  "current_status",  :limit => 255, :default => 0
     t.datetime "alloted_date"
     t.datetime "completion_date"
     t.boolean  "is_compeleted",                  :default => false
+    t.integer  "assignor_id"
   end
 
   create_table "comments", :force => true do |t|

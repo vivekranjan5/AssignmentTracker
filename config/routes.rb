@@ -8,7 +8,7 @@ AssignTracker::Application.routes.draw do
   devise_for :users
   
   resources :assignments do 
-    resources :comments, module: :assignments 
+    resources :comments 
     resources :subtasks
   end
   resources :users, only: [:show,:index]
