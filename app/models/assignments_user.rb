@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AssignmentsUser < ActiveRecord::Base
 	# many to many association with user and assignment has_many through
 	include ActiveModel::ForbiddenAttributesProtection

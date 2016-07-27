@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 AssignTracker::Application.routes.draw do
   get "subtasks/new"
 
@@ -6,7 +7,9 @@ AssignTracker::Application.routes.draw do
   get "subtasks/index"
 
   devise_for :users
-  
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
   resources :assignments do 
     resources :comments 
     resources :subtasks

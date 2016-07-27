@@ -55,7 +55,7 @@
  	<b>Assigned To: </b>
  	<ul>
  		<% @assignment.assigned_users.each do |user| %>
- 			<li><%= user.name %></li>
+ 			<li><%= user.name %>(<%= User.find(@assignment.assignments_users.where(:assignee_id => user.id).first.assignor_id).name %>)</li>
  		<% end %>
  	</ul>
 </p>
@@ -87,9 +87,10 @@
  		<%= render @comments %>
  	</ol>
  	<% if @assignment.assignments_users.exists? %>
- 	<% if @assignment.assignments_users.where(:assignor_id == current_user.id || :assignee_id == current_user.id).size>0 %>
+ 		<% unless @assignment.assignments_users.where("assignee_id = ? OR assignor_id = ?",current_user.id, current_user.id ).empty?  %>
  		<%= render 'comments/form' %>
-	<% end %>
+ 		<% end %>
+	
 	<% end %>
 </section>
 

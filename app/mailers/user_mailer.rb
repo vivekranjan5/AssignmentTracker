@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class UserMailer < ActionMailer::Base
   default from: "vivek.ranjan@assigntracker.com"
 
@@ -7,8 +8,8 @@ class UserMailer < ActionMailer::Base
   	mail(to: @user.email, subject: "Welcome to our website")
   end
 
-  def new_assignment_created(user)
-  	@user = user
+  def new_assignment_created(id)
+  	@user = User.find(id)
   	@url = 'localhost:3000'
   	mail(to: @user.email, subject: "Assignment Created by You")
   end

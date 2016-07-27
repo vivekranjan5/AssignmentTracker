@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateSubtasks < ActiveRecord::Migration
   def change
     create_table :subtasks do |t|

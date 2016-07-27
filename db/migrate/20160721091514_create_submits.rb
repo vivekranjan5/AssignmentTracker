@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateSubmits < ActiveRecord::Migration
   def change
     create_table :submits do |t|

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AssignmentMailer < ActionMailer::Base
   default from: "vivek.ranjan@assigntracker.com"
 

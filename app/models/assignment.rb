@@ -1,8 +1,14 @@
+# -*- encoding : utf-8 -*-
 class Assignment < ActiveRecord::Base
 	#extend Enumerize
 	include ActiveModel::ForbiddenAttributesProtection
+
+	#implementing elastic Search
+	#include Elasticsearch::Model
+	#include Elasticsearch::Model::Callbacks
+
 	#many to many association with the user
-	attr_accessible :title,:content,:start_date
+	attr_accessible :title,:content,:start_date, :subtasks_attributes
 
 
 	has_many :assignments_users, :class_name => "AssignmentsUser", :dependent => :destroy
@@ -21,4 +27,7 @@ class Assignment < ActiveRecord::Base
 	validates :content, presence: true
 
 	has_many :subtasks
+	accepts_nested_attributes_for :subtasks, allow_destroy: true
+
+
 end

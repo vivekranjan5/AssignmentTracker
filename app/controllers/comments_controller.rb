@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CommentsController < ApplicationController
 	before_filter :authenticate_user!
 	before_filter :set_assignments
@@ -6,15 +7,14 @@ class CommentsController < ApplicationController
 	def create
 		@comment = @assignment.comments.new(comment_params)
 		@comment.user_name = current_user.name
-		@creator_user = @assignment.creator
+		@commentor_id = current_user.id
 		@comment.save!
-		if current_user!=@creator_user
-			CommentMailer.comment_create_mail(@user, @comment, @assignment).deliver
+		if @comment.assignment.assignments_users.where("assignee_id = ? ",@commentor_id).empty?
+			@user = User.find(@comment.assignment.assignments_users.where("assignor_id = ?", @commentor_id).first.assignee_id)
 		else
-			@assignment.assigned_users.each do |user|
-				CommentMailer.comment_assignee_mail(user, @comment, @assignment).deliver	
-			end
+			@user = User.find(@comment.assignment.assignments_users.where("assignee_id = ?", @commentor_id).first.assignor_id)
 		end
+		CommentsWorker.delay.perform(@user,@comment,@assignment)
 		respond_to do |format|
       		format.html { redirect_to @assignment}
       		format.js

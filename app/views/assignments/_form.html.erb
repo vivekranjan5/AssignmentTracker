@@ -19,6 +19,11 @@
     <%= f.label :content %><br />
     <%= f.text_area :content %>
   </div>
+
+  <%= f.fields_for :subtask do |g| %>
+    <%= g.label :subtask_content %><br>
+    <%= g.text_area :subtask_content %>
+  <% end %>
   
   <div class="actions">
     <%= f.submit %>

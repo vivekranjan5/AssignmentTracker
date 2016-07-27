@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangesAssingmentsUser < ActiveRecord::Migration
   def up
   	add_column :assignments_users, :assignor_id, :integer

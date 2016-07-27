@@ -26,8 +26,11 @@ gem 'quiet_assets', group: :development
 
 gem 'enumerize'
 gem 'strong_parameters'
-
-
+gem 'sidekiq', '~> 2.16.1'
+gem 'cancan'
+gem 'sinatra', :require => false
+gem 'elasticsearch-rails'
+gem 'elasticsearch-model'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AssignmentsController < ApplicationController
   # GET /assignments
   # GET /assignments.json
@@ -7,6 +8,7 @@ class AssignmentsController < ApplicationController
 
   def index
     @assignments = Assignment.order("created_at DESC")
+    #@assignments = Assignment.search((params[:q].present? ? params[:q] : '*')).records
 
     respond_to do |format|
       format.html # index.html.erb
@@ -45,9 +47,10 @@ class AssignmentsController < ApplicationController
   # POST /assignments.json
   def create
     @assignment = current_user.created_assignments.create(assignment_params)
+    @assignment.subtasks.create(params[:assignment][:subtask])
     respond_to do |format|
       if @assignment.save
-        UserMailer.new_assignment_created(current_user).deliver
+        AssignmentsWorker.delay.perform(current_user.id)
         format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
         format.json { render json: @assignment, status: :created, location: @assignment }
       else
