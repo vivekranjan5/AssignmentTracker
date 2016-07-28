@@ -5,10 +5,15 @@ class AssignmentsController < ApplicationController
 
   before_filter :return_if_assignment_exists?, :only => [:show, :edit, :destroy, :assignees]
   before_filter :authenticate_user!
-
+  before_filter :beautify_search_url, :only => [:index]
   def index
-    @assignments = Assignment.order("created_at DESC")
-    #@assignments = Assignment.search((params[:q].present? ? params[:q] : '*')).records
+    #@assignments = Assignment.order("created_at DESC")
+    if params[:query].present?
+      @assignments = Assignment.custom_search(params[:query]).records
+  
+    else
+      @assignments = Assignment.all
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -137,6 +142,10 @@ class AssignmentsController < ApplicationController
 
   def assignment_params
     params.require(:assignment).permit(:title,:content)
+  end
+
+  def beautify_search_url
+    redirect_to search_assignments_path(query: params[:q]) if params[:q].present?
   end
 
 end

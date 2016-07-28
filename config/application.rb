@@ -53,7 +53,7 @@ module AssignTracker
 
     # Enable the asset pipeline
     config.assets.enabled = true
-
+    #config.active_job.queue_adapter = :sidekiq
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 

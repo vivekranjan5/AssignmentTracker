@@ -11,6 +11,7 @@ AssignTracker::Application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   resources :assignments do 
+    get 'search/*query' , :to => 'assignments#index', as: :search, on: :collection
     resources :comments 
     resources :subtasks
   end
