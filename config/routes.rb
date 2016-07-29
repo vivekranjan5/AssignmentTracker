@@ -1,9 +1,26 @@
+# -*- encoding : utf-8 -*-
 AssignTracker::Application.routes.draw do
+  get "subtasks/new"
+
+  get "subtasks/created"
+
+  get "subtasks/index"
+
   devise_for :users
-  
-  resources :assignments
-  resources :users, only: [:show]
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+  resources :assignments do 
+    get 'search/*query' , :to => 'assignments#index', as: :search, on: :collection
+    resources :comments 
+    resources :subtasks
+  end
+  resources :users, only: [:show,:index]
+  get 'assignment/assignees/:id' => 'assignments#assignees', :as => "assignusers"
+  get 'assignment/incstatus/:id' => 'assignments#incstatus', :as => "incstatus"
+  post 'assignment/assignees/:id' => 'assignments#createassignees'
   root :to => "assignments#index"
+
 
 
   # The priority is based upon order of creation:

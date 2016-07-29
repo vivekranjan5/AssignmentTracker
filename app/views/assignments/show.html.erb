@@ -3,33 +3,95 @@
   <%= @assignment.title %>
 </p>
 <p>
- 	<b>Created_by: </b>
+	<b>Created_by: </b>
  	<%= @assignment.creator.name %>
 </p>
+
+
 <p>
-	<b>Assignment Creation Date: </b>
-	<%= @assignment.start_date.strftime("%d-%m-%Y") %>
+	<b>Start Date: </b>
+	<% if @assignment.start_date.nil? %>
+		<%= "Assignment Not Yet Started" %>
+	<% else %>
+		<%= @assignment.start_date.strftime("%d-%m-%Y") %>
+	<% end %>
 </p>
-<% if @temp_assignment.exists? %>
+
+
+<% if @assignment.assignments_users.where(:assignee_id => current_user.id).exists? %>
 	<p>
  		<b>Project Status: </b>
- 		<%= @temp_assignment.first.current_status %>
+ 		<%= give_status(@assignment.assignments_users.where(:assignee_id => current_user.id).first.current_status) %>
 	</p>
+	
+	<!-- editing the status is only in hand of the assignees not the assignor -->
+	<% if @assignment.assignments_users.where(:assignee_id == current_user.id) %>
+		<p>
+		<% unless @assignment.assignments_users.where(:assignee_id => current_user.id).first.current_status>=2  %>
+ 		<b>Mark Assignment as: <%= link_to give_status(@assignment.assignments_users.where(:assignee_id => current_user.id).first.current_status+1), incstatus_path(@assignment) %></b>
+ 		<% end %>
+		</p>
+	<% end %>
 <% end %>
+
+
+<p>
+	<b><%= link_to "Create Subtasks", new_assignment_subtask_path(@assignment) %></b>
+	<br>
+	<b>Subtasks of this Assignment</b>
+	<ol>
+		<% @subtasks.each do |subtask| %>
+		<li><%= subtask.subtask_content %>
+		<%= link_to "Delete the Subtaks", [@assignment, subtask],:method => :delete, :confirm => "Are you sure you want to delete the subtaks" %>
+		</li>
+		<% end %>
+	</ol>
+</p>
+
+
+
+
 <p>
  	<b>Assigned To: </b>
- 	<ol>
- 	<% @assignment.assigned_users.each do |user| %>
- 		<li><%= user.name %></li>
- 	<% end %>
- 	</ol>
- </p>
+ 	<ul>
+ 		<% @assignment.assigned_users.each do |user| %>
+ 			<li><%= user.name %>(<%= User.find(@assignment.assignments_users.where(:assignee_id => user.id).first.assignor_id).name %>)</li>
+ 		<% end %>
+ 	</ul>
+</p>
+
+
+
 <p>
   <b>Content:</b>
   <%= @assignment.content %>
 </p>
  
+<br><br>
+
 <%if user_signed_in? %>
-	<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
+	<%= link_to 'Assign to users',assignusers_path(@assignment) %> | 
+	<% if @assignment.creator==current_user %>
+		<%= link_to 'Edit', edit_assignment_path(@assignment) %> | 
+	<% end %>
 <% end %> 
+
 <%= link_to 'Back', assignments_path %>
+
+<p>
+	<%= link_to "Comments" , "#", :id => "comments-link" %>
+</p>
+ 
+<section id="comments-section">
+ 	<ol id="comments">
+ 		<%= render @comments %>
+ 	</ol>
+ 	<% if @assignment.assignments_users.exists? %>
+ 		<% unless @assignment.assignments_users.where("assignee_id = ? OR assignor_id = ?",current_user.id, current_user.id ).empty?  %>
+ 		<%= render 'comments/form' %>
+ 		<% end %>
+	
+	<% end %>
+</section>
+
+

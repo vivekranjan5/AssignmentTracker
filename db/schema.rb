@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160722094629) do
+ActiveRecord::Schema.define(:version => 20160726055054) do
 
   create_table "assignments", :force => true do |t|
     t.string   "title"
@@ -24,12 +24,29 @@ ActiveRecord::Schema.define(:version => 20160722094629) do
 
   create_table "assignments_users", :force => true do |t|
     t.integer  "assignment_id"
-    t.integer  "user_id"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.string   "current_status",  :default => "Assigned"
+    t.integer  "assignee_id"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
+    t.integer  "current_status",  :limit => 255, :default => 0
     t.datetime "alloted_date"
     t.datetime "completion_date"
+    t.boolean  "is_compeleted",                  :default => false
+    t.integer  "assignor_id"
+  end
+
+  create_table "comments", :force => true do |t|
+    t.text     "body"
+    t.string   "user_name"
+    t.integer  "assignment_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "subtasks", :force => true do |t|
+    t.string   "subtask_content"
+    t.integer  "assignment_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "users", :force => true do |t|

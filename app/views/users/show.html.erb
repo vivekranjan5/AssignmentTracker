@@ -52,4 +52,21 @@
   </tr>
 <% end %>
 </table>
+
+<br><br><br>
+<h1> My Subtasks and their assignments </h1>
+<table border=1><tr>
+<th> Subtask content</th>
+<th> Assignment of the Subtask </th>
+</tr>
+<% if @subtasks.length > 0 %>
+<% @subtasks.each do |subtask| %>
+<tr>
+<td><%= subtask.subtask_content %></td>
+<td><%= subtask.assignment.title %></td>
+<td><%= link_to "Show", [subtask.assignment,subtask] %></td>
+</tr>
+<% end %>
+<% end %>
+</table>
 <% end %>

@@ -1,3 +1,10 @@
+<%= form_tag assignments_path, role: "search", :method => "get" do |f| %>
+  <%= text_field_tag :q, params[:q] %>
+
+  <%= button_tag "Seach", :name => nil %>
+<% end %>
+
+
 <h1>Listing assignments</h1>
 
 <table border=1>
@@ -22,6 +29,7 @@
       <td><%= link_to 'Edit', edit_assignment_path(assignment) %></td>
       
     <% end %> -->
+    <td><%= link_to 'Assign to users',assignusers_path(assignment) %></td>
   </tr>
 <% end %>
 </table>
